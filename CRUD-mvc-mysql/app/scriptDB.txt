@@ -1,0 +1,72 @@
+CREATE DATABASE crud_php_app;
+USE crud_php_app;
+CREATE TABLE module (
+	module_id INT(11) NOT NULL,
+	module_name VARCHAR(20) NOT NULL,
+    module_route VARCHAR(20) NOT NULL,
+    module_description VARCHAR(200) NOT NULL
+);
+CREATE TABLE `role` (
+	role_id INT(11) NOT NULL,
+	role_name VARCHAR(20) NOT NULL
+);
+CREATE TABLE role_module (
+	roleModule_id INT(11) NOT NULL,
+	role_fk INT(11) NOT NULL,
+    module_fk INT(11) NOT NULL
+);
+CREATE TABLE `user` (
+	user_id INT(11) NOT NULL,
+	user_user VARCHAR(30) NOT NULL,
+    user_password VARCHAR(256) NOT NULL,
+    userStatus_fk INT(11) NOT NULL,
+    role_fk INT(11) NOT NULL
+);
+CREATE TABLE userstatus (
+	userStatus_id INT(11) NOT NULL,
+	userStatus_name VARCHAR(20) NOT NULL
+);
+ALTER TABLE module
+	ADD PRIMARY KEY (module_id),
+    ADD UNIQUE KEY module_name (module_name),
+    ADD UNIQUE KEY module_route (module_route)
+;
+ALTER TABLE `role`
+	ADD PRIMARY KEY (role_id)
+;
+ALTER TABLE role_module
+	ADD PRIMARY KEY (roleModule_id),
+    ADD KEY role_module_module (module_fk),
+    ADD KEY role_module_role (role_fk)
+;
+ALTER TABLE `user`
+	ADD PRIMARY KEY (user_id),
+    ADD KEY user_role (role_fk),
+    ADD KEY user_user_status (userStatus_fk)
+;
+ALTER TABLE userstatus
+	ADD PRIMARY KEY (userStatus_id)
+;
+ALTER TABLE module
+	MODIFY module_id INT(11) NOT NULL AUTO_INCREMENT
+;
+ALTER TABLE `role`
+	MODIFY role_id INT(11) NOT NULL AUTO_INCREMENT
+;
+ALTER TABLE role_module
+	MODIFY roleModule_id INT(11) NOT NULL AUTO_INCREMENT
+;
+ALTER TABLE `user`
+	MODIFY user_id INT(11) NOT NULL AUTO_INCREMENT
+;
+ALTER TABLE userstatus
+	MODIFY userStatus_id INT(11) NOT NULL AUTO_INCREMENT
+;
+ALTER TABLE role_module
+	ADD CONSTRAINT role_module_module FOREIGN KEY (module_fk) REFERENCES module (module_id),
+    ADD CONSTRAINT role_module_role FOREIGN KEY (role_fk) REFERENCES `role` (role_id)
+;
+ALTER TABLE `user`
+	ADD CONSTRAINT user_role FOREIGN KEY (role_fk) REFERENCES `role` (role_id),
+    ADD CONSTRAINT user_user_status FOREIGN KEY (userStatus_fk) REFERENCES userstatus (userStatus_id)
+;
